@@ -20,7 +20,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 $dotenv = Dotenv::createUnsafeImmutable(__DIR__ . '/../');
-$dotenv->load();
+$dotenv->safeLoad();
 
 $container = new Container();
 AppFactory::setContainer($container);
