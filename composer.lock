@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "24c910fac7a6c7b6afd31849f9e42e8e",
+    "content-hash": "9df02655f41d311c641662e5a3c381eb",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -813,23 +813,25 @@
         },
         {
             "name": "imangazaliev/didom",
-            "version": "1.13",
+            "version": "2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Imangazaliev/DiDOM.git",
-                "reference": "10c4033d56e599f09183959ed90bf17519b9e38b"
+                "reference": "87f7089d95aef7fd09dc68826cfa245b90f3040b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Imangazaliev/DiDOM/zipball/10c4033d56e599f09183959ed90bf17519b9e38b",
-                "reference": "10c4033d56e599f09183959ed90bf17519b9e38b",
+                "url": "https://api.github.com/repos/Imangazaliev/DiDOM/zipball/87f7089d95aef7fd09dc68826cfa245b90f3040b",
+                "reference": "87f7089d95aef7fd09dc68826cfa245b90f3040b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "ext-dom": "*",
+                "ext-iconv": "*",
+                "php": ">=7.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8"
+                "phpunit/phpunit": "^8.5"
             },
             "type": "library",
             "autoload": {
@@ -857,9 +859,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Imangazaliev/DiDOM/issues",
-                "source": "https://github.com/Imangazaliev/DiDOM/tree/develop"
+                "source": "https://github.com/Imangazaliev/DiDOM/tree/2.0"
             },
-            "time": "2017-12-08T15:20:07+00:00"
+            "time": "2022-05-08T01:48:13+00:00"
         },
         {
             "name": "laravel/serializable-closure",
