@@ -31,7 +31,7 @@
                 </table>
             </div>
             <h2 class="mt-5 mb-3">Проверки</h2>
-            <form method="post" action="/urls/1/checks">
+            <form method="post" action="{{ url_for('checks.create', {'id' : url.id }) }}">
                 <input type="submit" class="btn btn-primary" value="Запустить проверку">
             </form>
             <table class="table table-bordered table-hover" data-test="checks">
@@ -44,6 +44,16 @@
                         <th>description</th>
                         <th>Дата создания</th>
                     </tr>
+                    {% for check in checks %}
+                        <tr>
+                            <td>{{ check.id }}</td>
+                            <td>{{ check.status_code }}</td>
+                            <td>{{ check.h1 }}</td>
+                            <td>{{ check.title }}</td>
+                            <td>{{ check.description }}</td>
+                            <td>{{ check.created_at }}</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

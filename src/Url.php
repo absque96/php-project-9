@@ -8,12 +8,19 @@ class Url
 {
     protected DB $db;
 
+    /**
+     * @param DB $db
+     */
     public function __construct(DB $db)
     {
         $this->db = $db;
     }
 
-    public function addUrl($name)
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function addUrl($name): mixed
     {
         $data = [
             'name' => $name,
@@ -26,13 +33,21 @@ class Url
         return $this->findBy('id', $id);
     }
 
-    public function getAll()
+    /**
+     * @return array|false
+     */
+    public function getAll(): bool|array
     {
         $sql = "SELECT * FROM urls ORDER BY id DESC";
         return $this->db->run($sql)->fetchAll();
     }
 
-    public function findBy($attr, $value)
+    /**
+     * @param $attr
+     * @param $value
+     * @return mixed
+     */
+    public function findBy($attr, $value): mixed
     {
         $sql = "SELECT * FROM urls WHERE {$attr}=:{$attr}";
         return $this->db->run($sql, [$attr => $value])->fetch();

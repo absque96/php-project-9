@@ -17,8 +17,8 @@
                         <tr>
                             <td>{{ url.id }}</td>
                             <td><a href="{{ url_for('urls.show', {'id' : url.id }) }}">{{ url.name }}</a></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ checks[url.id].created_at }}</td>
+                            <td>{{ checks[url.id].status_code }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -2,8 +2,12 @@
 
 use App\DB;
 use App\Url;
+use App\UrlCheck;
 use DI\Container;
+use DiDom\Document;
 use Dotenv\Dotenv;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Flash\Messages;
@@ -12,6 +16,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\TwigMiddleware;
 use Valitron\Validator;
+use Illuminate\Support\Arr;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -39,6 +44,10 @@ $container->set('url', function (ContainerInterface $container) {
     return new Url($container->get('DB'));
 });
 
+$container->set('urlCheck', function (ContainerInterface $container) {
+    return new UrlCheck($container->get('DB'));
+});
+
 $container->set('flash', function () {
     return new Messages();
 });
@@ -55,12 +64,26 @@ $app->get('/', function (Request $request, Response $response) {
 
 $app->get('/urls', function (Request $request, Response $response) {
     $urls = $this->get('url')->getAll();
-    return $this->get('view')->render($response, 'urls/index.twig', ['urls' => $urls]);
+    $checks = $this->get('urlCheck')->getDistinct();
+
+    $data = [
+        'urls' => $urls,
+        'checks' => Arr::keyBy($checks, 'url_id'),
+    ];
+
+    return $this->get('view')->render($response, 'urls/index.twig', $data);
 })->setName('urls.index');
 
 $app->get('/urls/{id:[0-9]+}', function (Request $request, Response $response, array $args) {
     $url = $this->get('url')->findBy('id', $args['id']);
-    return $this->get('view')->render($response, 'urls/show.twig', ['url' => $url]);
+    $checks = $this->get('urlCheck')->findBy('url_id', $url['id'], true);
+
+    $data = [
+        'url' => $url,
+        'checks' => $checks,
+    ];
+
+    return $this->get('view')->render($response, 'urls/show.twig', $data);
 })->setName('urls.show');
 
 $app->post('/urls', function (Request $request, Response $response) use ($routeParser) {
@@ -98,5 +121,41 @@ $app->post('/urls', function (Request $request, Response $response) use ($routeP
         ->withHeader('Location', $routeParser->urlFor('urls.show', ['id' => $id]))
         ->withStatus(302);
 })->setName('urls.create');
+
+$app->post('/urls/{id:[0-9]+}/checks', function (Request $request, Response $response, array $args) use ($routeParser) {
+    $url = $this->get('url')->findBy('id', $args['id']);
+
+    $client = new Client();
+    try {
+        $response = $client->request('GET', $url['name']);
+    } catch (ClientException $e) {
+        $this->get('flash')->addMessage('error', 'При проверке произошла ошибка');
+        return $response
+            ->withHeader('Location', $routeParser->urlFor('urls.show', ['id' => $url['id']]))
+            ->withStatus(302);
+    }
+
+    $statusCode = $response->getStatusCode();
+    $content = $response->getBody()->getContents();
+    $document = new Document($content);
+    $h1 = optional($document->first('h1'))->text();
+    $title = optional($document->first('title'))->text();
+    $description = optional($document->first('meta[name=description]'))->getAttribute('content');
+
+    $urlCheckData = [
+        'url_id' => $url['id'],
+        'status_code' => $statusCode,
+        'h1' => $h1,
+        'title' => $title,
+        'description' => $description,
+    ];
+
+    $this->get('urlCheck')->addCheck($urlCheckData);
+    $this->get('flash')->addMessage('success', 'Страница успешно проверена');
+
+    return $response
+        ->withHeader('Location', $routeParser->urlFor('urls.show', ['id' => $url['id']]))
+        ->withStatus(302);
+})->setName('checks.create');
 
 $app->run();

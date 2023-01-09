@@ -31,7 +31,12 @@ class DB
         }
     }
 
-    public function run($sql, $args = null)
+    /**
+     * @param $sql
+     * @param $args
+     * @return false|\PDOStatement
+     */
+    public function run($sql, $args = null): bool|\PDOStatement
     {
         if (!$args) {
             return $this->pdo->query($sql);
