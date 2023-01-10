@@ -100,10 +100,10 @@ $app->post('/urls', function (Request $request, Response $response) use ($routeP
             'errors' => $validator->errors(),
         ];
 
-        return $this->get('view')->render($response, 'index.twig', $data);
+        return $this->get('view')->render($response->withStatus(422), 'index.twig', $data);
     }
 
-    $parsedUrl = parse_url($urlName);
+    $parsedUrl = parse_url(mb_strtolower($urlName));
     $parsedUrlName = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
 
     $url = $this->get('url')->findBy('name', $parsedUrlName);
