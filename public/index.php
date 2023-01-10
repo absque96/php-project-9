@@ -87,7 +87,7 @@ $app->get('/urls/{id:[0-9]+}', function (Request $request, Response $response, a
 })->setName('urls.show');
 
 $app->post('/urls', function (Request $request, Response $response) use ($routeParser) {
-    $parsedBody = $request->getParsedBody();
+    $parsedBody = (array) $request->getParsedBody();
     $urlName = $parsedBody['url']['name'];
 
     $validator = new Validator($parsedBody);
