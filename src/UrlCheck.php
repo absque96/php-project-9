@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+
 class UrlCheck
 {
     protected DB $db;
