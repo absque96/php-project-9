@@ -35,12 +35,12 @@ VALUES (:url_id, :status_code, :h1, :title, :description, :created_at)
     }
 
     /**
-     * @param $attr
-     * @param $value
+     * @param string $attr
+     * @param mixed $value
      * @param bool $all
      * @return mixed
      */
-    public function findBy($attr, $value, bool $all = false): mixed
+    public function findBy(string $attr, mixed $value, bool $all = false): mixed
     {
         $sql = "SELECT * FROM url_checks WHERE {$attr}=:{$attr} ORDER BY id DESC";
         $stmt = $this->db->run($sql, [$attr => $value]);

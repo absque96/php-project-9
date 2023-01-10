@@ -17,10 +17,10 @@ class Url
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
-    public function addUrl($name): mixed
+    public function addUrl(string $name): mixed
     {
         $data = [
             'name' => $name,
@@ -43,11 +43,11 @@ class Url
     }
 
     /**
-     * @param $attr
-     * @param $value
+     * @param string $attr
+     * @param mixed $value
      * @return mixed
      */
-    public function findBy($attr, $value): mixed
+    public function findBy(string $attr, mixed $value): mixed
     {
         $sql = "SELECT * FROM urls WHERE {$attr}=:{$attr}";
         return $this->db->run($sql, [$attr => $value])->fetch();

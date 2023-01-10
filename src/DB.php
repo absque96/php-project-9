@@ -4,6 +4,7 @@ namespace App;
 
 use PDO;
 use PDOException;
+use PDOStatement;
 
 class DB
 {
@@ -32,11 +33,11 @@ class DB
     }
 
     /**
-     * @param $sql
-     * @param $args
-     * @return false|\PDOStatement
+     * @param string $sql
+     * @param array|null $args
+     * @return PDOStatement
      */
-    public function run($sql, $args = null): bool|\PDOStatement
+    public function run(string $sql, array $args = null): PDOStatement
     {
         if (!$args) {
             return $this->pdo->query($sql);
